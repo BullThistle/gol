@@ -1,24 +1,24 @@
 import produce from 'immer'
 import { useCallback, useRef, useState } from 'react'
 
-const numRows = 50
-const numCols = 50
+const numRows = 1
+const numCols = 1
 
-const operations = [
-  [0, 1],
-  [0, -1],
-  [1, -1],
-  [-1, 1],
-  [1, 1],
-  [-1, -1],
-  [1, 0],
-  [-1, 0],
-]
+// const operations = [
+//   [0, 1],
+//   [0, -1],
+//   [1, -1],
+//   [-1, 1],
+//   [1, 1],
+//   [-1, -1],
+//   [1, 0],
+//   [-1, 0],
+// ]
 
 const setRows = () => {
   const rows = []
   for (let i = 0; i < numRows; i++)
-    rows.push(Array.from(Array(numCols), () => 0))
+    rows.push(Array.from(Array(numCols), () => false))
   return rows
 }
 
@@ -29,13 +29,16 @@ export const App = () => {
 
   const runningRef = useRef(false)
   runningRef.current = running
+  console.log(grid)
 
   const runSimulation = useCallback(() => {
     if (!runningRef.current) return
 
     setGrid((g) => {
       return produce(g, (gridCopy) => {
-        // make it go
+        if (gridCopy[0][0]) {
+          gridCopy[0][0] = false
+        }
       })
     })
 
@@ -53,7 +56,7 @@ export const App = () => {
           }
         }}
       >
-        {running ? 'Start' : 'Stop'}
+        {running ? 'Stop' : 'Start'}
       </button>
       <div
         style={{
@@ -67,7 +70,7 @@ export const App = () => {
               key={`${i}-${k}`}
               onClick={() => {
                 const newGrid = produce(grid, (gridCopy) => {
-                  gridCopy[i][k] = grid[i][k] ? 0 : 1
+                  gridCopy[i][k] = !gridCopy[i][k]
                 })
                 setGrid(newGrid)
               }}
