@@ -1,19 +1,19 @@
 import produce from 'immer'
 import { useCallback, useRef, useState } from 'react'
 
-const numRows = 1
-const numCols = 1
+const numRows = 2
+const numCols = 2
 
-// const operations = [
-//   [0, 1],
-//   [0, -1],
-//   [1, -1],
-//   [-1, 1],
-//   [1, 1],
-//   [-1, -1],
-//   [1, 0],
-//   [-1, 0],
-// ]
+const operations = [
+  [0, 1],
+  [0, -1],
+  [1, -1],
+  [-1, 1],
+  [1, 1],
+  [-1, -1],
+  [1, 0],
+  [-1, 0],
+]
 
 const setRows = () => {
   const rows = []
@@ -36,9 +36,18 @@ export const App = () => {
 
     setGrid((g) => {
       return produce(g, (gridCopy) => {
-        if (gridCopy[0][0]) {
-          gridCopy[0][0] = false
+        for (let i = 0; i < numCols; i++) {
+          for (let j = 0; j < numRows; j++) {
+            let neighborCount: number = 0
+            operations.forEach((operation) => {
+              // if (gridCopy.hasOwn)
+              if (gridCopy[i + operation[0]]?.[j + operation[1]]) neighborCount++
+            })
+
+            if (neighborCount < 2 && gridCopy[i][j]) gridCopy[i][j] = false
+          }
         }
+        
       })
     })
 
